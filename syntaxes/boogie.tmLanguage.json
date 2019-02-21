@@ -1,0 +1,150 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Boogie",
+    "patterns": [
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "name": "string.quoted.double.untitled",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "match": "\\\\.",
+                    "name": "constant.character.escape.untitled"
+                }
+            ]
+        },
+        {
+            "name": "comment.block.boogie",
+            "begin": "/\\*",
+            "end": "\\*/"
+        },
+        {
+            "name": "comment.line.double-slash.boogie",
+            "match": "(//).*$\\n?"
+        },
+        {
+            "name": "string.other.attribute.boogie",
+            "begin": "{:",
+            "end": "}",
+            "patterns": [
+                {
+                    "include": "#constants-and-special-vars"
+                }
+            ]
+        },
+        {
+            "name": "storage.type.modifier.tag.boogie",
+            "match": "<[\\w\\s,]+>"
+        },
+        {
+            "include": "#constants-and-special-vars"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "match": "(\\s*([^: ]+):(\n|\r))",
+            "name": "entity.name.block.boogie"
+        },
+        {
+            "match": ";",
+            "name": "punctuation.terminator.boogie"
+        }
+    ],
+    "repository": {
+        "constants-and-special-vars": {
+            "patterns": [
+                {
+                    "name": "constant.language.boolean.bpl",
+                    "match": "(?<![\\w$.])(true|false)(?![\\w$.])"
+                },
+                {
+                    "name": "constant.numberic.bitvector.bpl",
+                    "match": "(?<![\\w$.])[0-9]+bv[0-9]+(?![\\w$.])"
+                },
+                {
+                    "name": "constant.numeric.integer.bpl",
+                    "match": "(?<![\\w$.])[0-9]+(?![\\w$.])"
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "storage.type.declaration.boogie",
+                    "match": "\\b(axiom|const|function|implementation|procedure|type|var)\\b"
+                },
+                {
+                    "name": "storage.type.boogie",
+                    "match": "(?<![\\w$.])(int|bool|real|bv[0-9]+)(?![\\w$.])"
+                },
+                {
+                    "name": "storage.modifier.boogie",
+                    "match": "(?<![\\w$.])(complete|finite|free|unique|where)(?![\\w$.])"
+                },
+                {
+                    "name": "keyword.other.specification.boogie",
+                    "match": "\\b(requires|ensures|modifies|returns|invariant)\\b"
+                },
+                {
+                    "name": "keyword.control.boogie",
+                    "match": "\\b(break|call|while|goto|return)\\b"
+                },
+                {
+                    "name": "keyword.control.conditional.boogie",
+                    "match": "\\b(if|then|else)\\b"
+                },
+                {
+                    "name": "keyword.control.statement.boogie",
+                    "match": "\\b(assert|assume|havoc)\\b"
+                },
+                {
+                    "name": "keyword.operator.assignment.boogie",
+                    "match": "(:=)"
+                },
+                {
+                    "name": "keyword.other.old.boogie",
+                    "match": "\\bold\\b"
+                },
+                {
+                    "name": "keyword.other.logical.quantifier.boogie",
+                    "match": "\\b(forall|exists)\\b"
+                },
+                {
+                    "name": "keyword.operator.logical.boogie",
+                    "match": "::"
+                },
+                {
+                    "name": "keyword.operator.logical.unary.boogie",
+                    "match": "!|:"
+                },
+                {
+                    "name": "keyword.operator.logical.binary.boogie",
+                    "match": "<==>|==>|&&|\\|\\|"
+                },
+                {
+                    "name": "keyword.operator.comparison.boogie",
+                    "match": "==|!=|<=|>=|<:|<|>"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.boogie",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.boogie",
+                    "match": "\\\\."
+                }
+            ]
+        }
+    },
+    "scopeName": "source.boogie"
+}
