@@ -37,8 +37,8 @@ function verifyFile(): void {
         let document = vscode.window.activeTextEditor.document;
         let options = undefined;
         // vscode.workspace.rootPath ? { cwd: vscode.workspace.rootPath } : undefined;
-        let fileName = vscode.window.activeTextEditor.document.fileName;
-        let args = [fileName]; // TODO get args from first line
+        let filePath = vscode.window.activeTextEditor.document.fileName;
+        let args = [filePath]; // TODO get args from first line
         let rawResult = '';
 
         let childProcess = cp.spawn('boogie', args, options);
@@ -46,10 +46,9 @@ function verifyFile(): void {
             console.log('Failed to start subprocess.\n' + err);
         });
         if (childProcess.pid) {
-            childProcess.stdout.on('data', (data: Buffer) => {
-                rawResult += data;
-            });
-            childProcess.stdout.on('end', () => {
+            childProcess.stdout.on('data', (data: Buffer) => rawResult += data);
+            childProcess.stderr.on('data', (data: Buffer) => { console.log(data); });
+            childProcess.on('close', (code: Number, _: string) => {
                 console.log(rawResult);
                 let lines = rawResult.split('\n');
                 let errorRegex = '^[^ (]*\\((\\d+),(\\d+)\\): (\\w+)\\b(.*)$';
@@ -85,20 +84,24 @@ function verifyFile(): void {
                     }
                 }
                 State.diagnostics.set(document.uri, diags);
-                if (diags.length === 0) {
+                let fileName = filePath.split('/').pop();
+                if (code !== 0) {
+                    vscode.window.showErrorMessage(
+                        'Boogie: ' + fileName + ': verification failed with code ' 
+                        + code);
+                } else if (diags.length > 0) {
                     vscode.window.showInformationMessage(
-                        fileName + ' verified successfully.');
+                        'Boogie: ' + fileName + ': ' + diags.length + ' errors.');
                 } else {
                     vscode.window.showInformationMessage(
-                        fileName + ': ' + diags.length + ' errors.');
+                        'Boogie: ' + fileName + ' verified successfully.');
                 }
             });
-            childProcess.stderr.on('data', (data: Buffer) => { console.log(data); });
         } else {
-            vscode.window.showErrorMessage('Failed to start subprocess.');
+            vscode.window.showErrorMessage('Boogie: Failed to start subprocess.');
         }
     } else {
-        vscode.window.showErrorMessage('No active window.');
+        vscode.window.showErrorMessage('Boogie: No active window.');
     }
 
 }
