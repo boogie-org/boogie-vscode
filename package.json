@@ -25,7 +25,7 @@
             {
                 "command": "boogie.verifyFile",
                 "key": "f5",
-                "when": "editorTextFocus"
+                "when": "editorLangId == boogie"
             }
         ],
         "languages": [
