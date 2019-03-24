@@ -20,6 +20,7 @@ This extension currently assumes it is installed and the path contains a `boogie
 
 ## Feature TODOs
 
+* Remove old diagnostics before running Boogie.
 * Display verification time.
 * Get Boogie arguments from comment at top of file.
 * Show progress/running time in status bar.
