@@ -38,22 +38,24 @@ function verifyFile(): void {
         let options = undefined;
         // vscode.workspace.rootPath ? { cwd: vscode.workspace.rootPath } : undefined;
         let filePath = vscode.window.activeTextEditor.document.fileName;
-        let args = [filePath]; // TODO get args from first line
+        let boogieArgs: string[] = []; // TODO get args from first line
+        let args = ['-f', 'TIME %e', 'boogie'].concat(boogieArgs, [filePath]);
         let rawResult = '';
 
-        let childProcess = cp.spawn('boogie', args, options);
+        let childProcess = cp.spawn('time', args, options);  //  boogie
         childProcess.on('error', (err) => {
             console.log('Failed to start subprocess.\n' + err);
         });
         if (childProcess.pid) {
             childProcess.stdout.on('data', (data: Buffer) => rawResult += data);
-            childProcess.stderr.on('data', (data: Buffer) => { console.log(data); });
+            childProcess.stderr.on('data', (data: Buffer) => rawResult += data);
             childProcess.on('close', (code: Number, _: string) => {
                 console.log(rawResult);
                 let lines = rawResult.split('\n');
                 let errorRegex = '^[^ (]*\\((\\d+),(\\d+)\\): (\\w+)\\b(.*)$';
                 let i = 1;
                 let diags = [];
+                let time = '';
                 while (i < lines.length) {
                     let res = lines[i].match(errorRegex);
                     if (res) {
@@ -79,6 +81,11 @@ function verifyFile(): void {
                             // ]
                         ));
                         // console.log(`${res[1]}/${res[2]}: ${res[3]}`);
+                    } else if (lines[i].startsWith('TIME')) {
+                        let rawSecs = lines[i++].split(' ')[1];
+                        let mins = Math.floor(+rawSecs / 60);
+                        let secs = (+rawSecs % 60).toFixed(1);
+                        time = (mins > 0 ? mins + 'm' : '') + secs + 's';
                     } else {
                         console.log(lines[i++]);
                     }
@@ -88,13 +95,15 @@ function verifyFile(): void {
                 if (code !== 0) {
                     vscode.window.showErrorMessage(
                         'Boogie: ' + fileName + ': verification failed with code ' 
-                        + code);
+                        + code + ' (' + time + ').');
                 } else if (diags.length > 0) {
                     vscode.window.showInformationMessage(
-                        'Boogie: ' + fileName + ': ' + diags.length + ' errors.');
+                        'Boogie: ' + fileName + ': ' + diags.length + ' errors ('
+                        + time + ').');
                 } else {
                     vscode.window.showInformationMessage(
-                        'Boogie: ' + fileName + ' verified successfully.');
+                        'Boogie: ' + fileName + ' verified successfully ('
+                        + time + ').');
                 }
             });
         } else {
