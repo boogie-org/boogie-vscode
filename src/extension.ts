@@ -11,9 +11,11 @@ import * as vscode from 'vscode';
 
 class State {
     public static diagnostics: vscode.DiagnosticCollection;
+    public static outChannel: vscode.OutputChannel;
 
     public static initialize() {
         this.diagnostics = vscode.languages.createDiagnosticCollection('Boogie');
+        this.outChannel = vscode.window.createOutputChannel("Boogie");
     }
 }
 
@@ -42,6 +44,7 @@ function verifyFile(): void {
         let args = ['-f', 'TIME %e', 'boogie'].concat(boogieArgs, [filePath]);
         let rawResult = '';
 
+        State.outChannel.appendLine("Calling: time " + args.join(" "));
         let childProcess = cp.spawn('time', args, options);  //  boogie
         childProcess.on('error', (err) => {
             console.log('Failed to start subprocess.\n' + err);
@@ -50,14 +53,18 @@ function verifyFile(): void {
             childProcess.stdout.on('data', (data: Buffer) => rawResult += data);
             childProcess.stderr.on('data', (data: Buffer) => rawResult += data);
             childProcess.on('close', (code: Number, _: string) => {
-                console.log(rawResult);
+                State.outChannel.appendLine(rawResult);
                 let lines = rawResult.split('\n');
                 let errorRegex = '^[^ (]*\\((\\d+),(\\d+)\\): (\\w+)\\b(.*)$';
+                let summaryRegex = '^Boogie program verifier finished with (\\d+) verified, (\\d+) errors?$';
                 let i = 1;
                 let diags = [];
                 let time = '';
+                let unrecognizedOutput = false;
+                let numErrors = undefined;
                 while (i < lines.length) {
                     let res = lines[i].match(errorRegex);
+                    let summary = lines[i].match(summaryRegex);
                     if (res) {
                         let lineNum = Number(res[1]) - 1;
                         let startChar = Number(res[2]) - 1;
@@ -68,6 +75,7 @@ function verifyFile(): void {
                         while ((lines[++i].trim() !== '') && !lines[i].match(errorRegex)) {
                             msg += '\n' + lines[i];
                         }
+                        i--;
 
                         diags.push(new vscode.Diagnostic(
                             new vscode.Range(new vscode.Position(lineNum, startChar),
@@ -81,14 +89,21 @@ function verifyFile(): void {
                             // ]
                         ));
                         // console.log(`${res[1]}/${res[2]}: ${res[3]}`);
+                    } else if (summary) {
+                        numErrors = summary[2];
                     } else if (lines[i].startsWith('TIME')) {
-                        let rawSecs = lines[i++].split(' ')[1];
+                        let rawSecs = lines[i].split(' ')[1];
                         let mins = Math.floor(+rawSecs / 60);
                         let secs = (+rawSecs % 60).toFixed(1);
                         time = (mins > 0 ? mins + 'm' : '') + secs + 's';
-                    } else {
-                        console.log(lines[i++]);
+                    } else if (lines[i].trim() !== '') {
+                        unrecognizedOutput = true;
+                        console.log('WARNING: didn\'t recognize line: ' + lines[i]);
                     }
+                    i++;
+                }
+                if (unrecognizedOutput) {
+                    State.outChannel.appendLine('WARNING: there was unrecognized output from Boogie');
                 }
                 State.diagnostics.set(document.uri, diags);
                 let fileName = filePath.split('/').pop();
@@ -96,9 +111,10 @@ function verifyFile(): void {
                     vscode.window.showErrorMessage(
                         'Boogie: ' + fileName + ': verification failed with code ' 
                         + code + ' (' + time + ').');
-                } else if (diags.length > 0) {
+                } else if (!numErrors || +numErrors > 0) {
                     vscode.window.showInformationMessage(
-                        'Boogie: ' + fileName + ': ' + diags.length + ' errors ('
+                        'Boogie: ' + fileName + ': ' + numErrors
+                        + ((numErrors && +numErrors > 1) ? ' errors (' : ' error (')
                         + time + ').');
                 } else {
                     vscode.window.showInformationMessage(
