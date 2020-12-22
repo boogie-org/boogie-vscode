@@ -94,7 +94,7 @@
                 },
                 {
                     "name": "keyword.operator.logical.unary.boogie",
-                    "match": "!|:"
+                    "match": "!"
                 },
                 {
                     "name": "keyword.operator.logical.binary.boogie",
