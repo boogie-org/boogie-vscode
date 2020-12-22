@@ -29,27 +29,27 @@
             "include": "#constants-and-special-vars"
         },
         {
-            "match": "(\\s*([^: ]+):(\n|\r))",
-            "name": "entity.name.block.boogie"
+            "name": "entity.name.block.boogie",
+            "match": "(\\s*([^: ]+):(\n|\r))"
         },
         {
-            "match": ";",
-            "name": "punctuation.terminator.boogie"
+            "name": "punctuation.terminator.boogie",
+            "match": ";"
         }
     ],
     "repository": {
         "constants-and-special-vars": {
             "patterns": [
                 {
-                    "name": "constant.language.boolean.bpl",
+                    "name": "constant.language.boolean.boogie",
                     "match": "(?<![\\w$.])(true|false)(?![\\w$.])"
                 },
                 {
-                    "name": "constant.numberic.bitvector.bpl",
+                    "name": "constant.numberic.bitvector.boogie",
                     "match": "(?<![\\w$.])[0-9]+bv[0-9]+(?![\\w$.])"
                 },
                 {
-                    "name": "constant.numeric.integer.bpl",
+                    "name": "constant.numeric.integer.boogie",
                     "match": "(?<![\\w$.])[0-9]+(?![\\w$.])"
                 }
             ]
