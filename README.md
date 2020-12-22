@@ -1,4 +1,4 @@
-# VS Code Boogie Extension
+# VS Code Extension for Boogie
 
 A Boogie language extension for VS Code. Supports basic syntax highlighting and Boogie verification.
 
