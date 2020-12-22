@@ -3,6 +3,9 @@
     "name": "Boogie",
     "patterns": [
         {
+            "include": "#constants"
+        },
+        {
             "include": "#keywords"
         },
         {
@@ -22,13 +25,6 @@
             ]
         },
         {
-            "name": "storage.type.modifier.tag.boogie",
-            "match": "<[\\w\\s,]+>"
-        },
-        {
-            "include": "#constants-and-special-vars"
-        },
-        {
             "name": "entity.name.block.boogie",
             "match": "(\\s*([^: ]+):(\n|\r))"
         },
@@ -38,19 +34,19 @@
         }
     ],
     "repository": {
-        "constants-and-special-vars": {
+        "constants": {
             "patterns": [
                 {
                     "name": "constant.language.boolean.boogie",
                     "match": "(?<![\\w$.])(true|false)(?![\\w$.])"
                 },
                 {
-                    "name": "constant.numberic.bitvector.boogie",
-                    "match": "(?<![\\w$.])[0-9]+bv[0-9]+(?![\\w$.])"
-                },
-                {
                     "name": "constant.numeric.integer.boogie",
                     "match": "(?<![\\w$.])[0-9]+(?![\\w$.])"
+                },
+                {
+                    "name": "constant.numeric.bitvector.boogie",
+                    "match": "(?<![\\w$.])[0-9]+bv[0-9]+(?![\\w$.])"
                 }
             ]
         },
@@ -59,10 +55,6 @@
                 {
                     "name": "storage.type.declaration.boogie",
                     "match": "\\b(axiom|const|function|implementation|procedure|type|var)\\b"
-                },
-                {
-                    "name": "storage.type.boogie",
-                    "match": "(?<![\\w$.])(int|bool|real|bv[0-9]+)(?![\\w$.])"
                 },
                 {
                     "name": "storage.modifier.boogie",
