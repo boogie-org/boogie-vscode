@@ -66,7 +66,7 @@
                 },
                 {
                     "name": "storage.modifier.boogie",
-                    "match": "(?<![\\w$.])(complete|finite|free|unique|where)(?![\\w$.])"
+                    "match": "(?<![\\w$.])(complete|extends|finite|free|unique|where)(?![\\w$.])"
                 },
                 {
                     "name": "keyword.other.specification.boogie",
@@ -74,7 +74,7 @@
                 },
                 {
                     "name": "keyword.control.boogie",
-                    "match": "\\b(break|call|while|goto|return)\\b"
+                    "match": "\\b(break|call|async|par|while|goto|return)\\b"
                 },
                 {
                     "name": "keyword.control.conditional.boogie",
@@ -82,7 +82,7 @@
                 },
                 {
                     "name": "keyword.control.statement.boogie",
-                    "match": "\\b(assert|assume|havoc)\\b"
+                    "match": "\\b(assert|assume|havoc|yield)\\b"
                 },
                 {
                     "name": "keyword.operator.assignment.boogie",
@@ -94,7 +94,7 @@
                 },
                 {
                     "name": "keyword.other.logical.quantifier.boogie",
-                    "match": "\\b(forall|exists)\\b"
+                    "match": "\\b(forall|exists|lambda)\\b"
                 },
                 {
                     "name": "keyword.operator.logical.boogie",
@@ -106,7 +106,7 @@
                 },
                 {
                     "name": "keyword.operator.logical.binary.boogie",
-                    "match": "<==>|==>|&&|\\|\\|"
+                    "match": "<==>|==>|<==|&&|\\|\\|"
                 },
                 {
                     "name": "keyword.operator.comparison.boogie",
