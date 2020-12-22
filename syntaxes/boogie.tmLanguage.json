@@ -9,24 +9,7 @@
             "include": "#strings"
         },
         {
-            "name": "string.quoted.double.untitled",
-            "begin": "\"",
-            "end": "\"",
-            "patterns": [
-                {
-                    "match": "\\\\.",
-                    "name": "constant.character.escape.untitled"
-                }
-            ]
-        },
-        {
-            "name": "comment.block.boogie",
-            "begin": "/\\*",
-            "end": "\\*/"
-        },
-        {
-            "name": "comment.line.double-slash.boogie",
-            "match": "(//).*$\\n?"
+            "include": "#comments"
         },
         {
             "name": "string.other.attribute.boogie",
@@ -44,9 +27,6 @@
         },
         {
             "include": "#constants-and-special-vars"
-        },
-        {
-            "include": "#keywords"
         },
         {
             "match": "(\\s*([^: ]+):(\n|\r))",
@@ -142,6 +122,19 @@
                 {
                     "name": "constant.character.escape.boogie",
                     "match": "\\\\."
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.boogie",
+                    "match": "(//).*$\\n?"
+                },
+                {
+                    "name": "comment.block.boogie",
+                    "begin": "/\\*",
+                    "end": "\\*/"
                 }
             ]
         }
