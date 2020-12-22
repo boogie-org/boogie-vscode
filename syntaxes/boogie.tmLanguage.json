@@ -13,11 +13,11 @@
         },
         {
             "name": "string.other.attribute.boogie",
-            "begin": "{:",
+            "begin": "{\\s*:",
             "end": "}",
             "patterns": [
                 {
-                    "include": "#constants-and-special-vars"
+                    "include": "$self"
                 }
             ]
         },
