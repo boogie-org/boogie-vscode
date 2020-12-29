@@ -1,8 +1,18 @@
 {
     "name": "boogie-vscode",
-    "displayName": "boogie-vscode",
-    "description": "Grammar and verification of Boogie files",
+    "displayName": "Boogie",
+    "description": "Boogie for Visual Studio Code",
     "version": "0.0.1",
+    "publisher": "boogie",
+    "homepage": "https://github.com/boogie-org",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/boogie-org/boogie-vscode.git"
+    },
+    "bugs": {
+        "url": "https://github.com/boogie-org/boogie-vscode/issues"
+    },
+    "icon": "images/boogie.png",
     "engines": {
         "vscode": "^1.31.0"
     },
@@ -31,13 +41,8 @@
         "languages": [
             {
                 "id": "boogie",
-                "aliases": [
-                    "Boogie",
-                    "boogie"
-                ],
-                "extensions": [
-                    ".bpl"
-                ],
+                "aliases": ["Boogie", "boogie"],
+                "extensions": [".bpl"],
                 "configuration": "./language-configuration.json"
             }
         ],
